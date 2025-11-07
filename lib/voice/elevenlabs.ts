@@ -6,20 +6,19 @@ const elevenlabs = new ElevenLabsClient({
 
 export async function generateSpeech(text: string, voiceId: string): Promise<Buffer> {
   try {
-    const audio = await elevenlabs.generate({
-      voice: voiceId,
+    const audio = await elevenlabs.textToSpeech.convert(voiceId, {
       text: text,
-      model_id: 'eleven_multilingual_v2', // Supports Urdu/Hindi
-      voice_settings: {
-        stability: 0.5,
-        similarity_boost: 0.75,
-      },
+      modelId: 'eleven_multilingual_v2', // Supports Urdu/Hindi
     })
 
-    // Convert stream to buffer
+    // Convert ReadableStream to buffer
+    const reader = audio.getReader()
     const chunks: Uint8Array[] = []
-    for await (const chunk of audio) {
-      chunks.push(chunk)
+    
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      if (value) chunks.push(value)
     }
     
     return Buffer.concat(chunks.map(chunk => Buffer.from(chunk)))
@@ -32,7 +31,7 @@ export async function generateSpeech(text: string, voiceId: string): Promise<Buf
 export async function getVoices() {
   try {
     const voices = await elevenlabs.voices.getAll()
-    return voices.voices || []
+    return voices || []
   } catch (error) {
     console.error('Error fetching voices:', error)
     return []
