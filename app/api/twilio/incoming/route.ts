@@ -1,4 +1,5 @@
 import { Twilio } from 'twilio'
+import VoiceResponse from 'twilio/lib/twiml/VoiceResponse'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { triggerWebhooks } from '@/lib/integrations/webhooks'
@@ -100,7 +101,7 @@ export async function POST(request: Request) {
   )
 
   // Generate TwiML for the call
-  const twiml = new Twilio.twiml.VoiceResponse()
+  const twiml = new VoiceResponse()
   
   // Connect to WebSocket for real-time transcription
   const wsUrl = `${process.env.NEXT_PUBLIC_APP_URL?.replace('http', 'ws')}/ws/call/${callSid}`

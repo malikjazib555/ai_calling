@@ -1,4 +1,4 @@
-import { Twilio } from 'twilio'
+import VoiceResponse from 'twilio/lib/twiml/VoiceResponse'
 import { NextResponse } from 'next/server'
 
 export async function GET(
@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: { callSid: string } }
 ) {
   const { callSid } = params
-  const twiml = new Twilio.twiml.VoiceResponse()
+  const twiml = new VoiceResponse()
   
   // Start the conversation
   twiml.say({
@@ -16,7 +16,7 @@ export async function GET(
 
   // Gather speech input
   twiml.gather({
-    input: 'speech',
+    input: ['speech'],
     action: `/api/twilio/process/${callSid}`,
     method: 'POST',
     speechTimeout: 'auto',

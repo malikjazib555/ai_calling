@@ -27,13 +27,13 @@ async function getTwilioCredentials(userId: string) {
       if (item.setting_key === 'twilio_auth_token') authToken = item.setting_value
       if (item.setting_key === 'twilio_phone_number') phoneNumber = item.setting_value
     })
-    console.log('[Test Call] Found in database:', { accountSid: accountSid ? '***' + accountSid.slice(-4) : null, authToken: authToken ? '***' : null, phoneNumber })
+    console.log('[Test Call] Found in database:', { accountSid: accountSid ? '***' + (accountSid as string).slice(-4) : null, authToken: authToken ? '***' : null, phoneNumber })
   }
 
   // Fallback to in-memory storage
   if (!accountSid) {
     accountSid = getSetting(userId, 'twilio_account_sid')
-    console.log('[Test Call] Checked memory storage for accountSid:', accountSid ? '***' + accountSid.slice(-4) : 'not found')
+    console.log('[Test Call] Checked memory storage for accountSid:', accountSid ? '***' + (accountSid as string).slice(-4) : 'not found')
   }
   if (!authToken) {
     authToken = getSetting(userId, 'twilio_auth_token')
@@ -54,7 +54,7 @@ async function getTwilioCredentials(userId: string) {
   }
   
   console.log('[Test Call] Final credentials:', {
-    accountSid: finalCredentials.accountSid ? '***' + finalCredentials.accountSid.slice(-4) : 'missing',
+    accountSid: finalCredentials.accountSid ? '***' + (finalCredentials.accountSid as string).slice(-4) : 'missing',
     authToken: finalCredentials.authToken ? '***' : 'missing',
     phoneNumber: finalCredentials.phoneNumber || 'missing',
   })
@@ -247,18 +247,18 @@ export async function POST(request: Request) {
       recordingStatusCallbackMethod: 'POST',
     })
 
-    // Update call log with call SID
-    if (callLog) {
-      await supabase
-        .from('call_logs')
-        .update({ call_sid: call.Sid })
-        .eq('id', callLog.id)
-    }
+  // Update call log with call SID
+  if (callLog) {
+    await supabase
+      .from('call_logs')
+      .update({ call_sid: call.sid })
+      .eq('id', callLog.id)
+  }
 
     return NextResponse.json({
       success: true,
-      callSid: call.Sid,
-      status: call.Status,
+      callSid: call.sid,
+      status: call.status,
       message: 'Call initiated successfully',
     })
   } catch (error: any) {

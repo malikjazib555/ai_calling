@@ -73,8 +73,8 @@ export async function GET(request: Request) {
   // Process analytics data
   const totalCalls = calls?.length || 0
   const totalOrders = orders?.length || 0
-  const avgCallDuration = calls?.reduce((sum, call) => sum + (call.duration_seconds || 0), 0) / (totalCalls || 1) || 0
-  const totalRevenue = orders?.reduce((sum, order) => sum + (order.quantity * 100), 0) || 0 // Mock calculation
+  const avgCallDuration = calls?.reduce((sum: number, call: any) => sum + (call.duration_seconds || 0), 0) / (totalCalls || 1) || 0
+  const totalRevenue = orders?.reduce((sum: number, order: any) => sum + (order.quantity * 100), 0) || 0 // Mock calculation
 
   return NextResponse.json({
     totalCalls,

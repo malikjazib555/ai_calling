@@ -132,7 +132,8 @@ export async function POST(
   }
 
   // Generate TwiML response
-  const twiml = new Twilio.twiml.VoiceResponse()
+  const VoiceResponse = (await import('twilio/lib/twiml/VoiceResponse')).default
+  const twiml = new VoiceResponse()
   
   // Use configured voice settings
   const voice = callLog.ai_agents?.voice_id || 'alice'
@@ -146,7 +147,7 @@ export async function POST(
 
   // Continue listening
   twiml.gather({
-    input: 'speech',
+    input: ['speech'],
     action: `/api/twilio/process/${callSid}`,
     method: 'POST',
     speechTimeout: 'auto',
