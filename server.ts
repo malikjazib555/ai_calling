@@ -47,7 +47,7 @@ wss.on('connection', (ws: WebSocket, req) => {
   }
 
   ws.on('close', () => {
-    for (const [key, client] of clients.entries()) {
+    for (const [key, client] of Array.from(clients.entries())) {
       if (client === ws) {
         clients.delete(key)
         if (key.startsWith('call-') || !key.startsWith('dashboard-')) {

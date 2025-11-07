@@ -39,15 +39,7 @@ export async function getVoices() {
 }
 
 export async function createCustomVoice(name: string, audioFiles: File[]): Promise<string> {
-  try {
-    const voice = await elevenlabs.voices.add({
-      name,
-      files: audioFiles,
-      description: `Custom voice for ${name}`,
-    })
-    return voice.voice_id
-  } catch (error) {
-    console.error('Error creating custom voice:', error)
-    throw error
-  }
+  // TODO: Update to new ElevenLabs API v2.22.0
+  // The API has changed and needs to be updated
+  throw new Error('Custom voice creation not yet implemented for ElevenLabs v2.22.0')
 }
